@@ -1,76 +1,66 @@
 class CaixaDaLanchonete {
-         calcularValorDaCompra(formaDePagamento, itens) {
-    const cardapio = [
-        { codigo: 'cafe', valor: 3.00 },
-        { codigo: 'chantily', valor: 1.50 },
-        { codigo: 'suco', valor: 6.20 },
-        { codigo: 'sanduiche', valor: 6.50 },
-        { codigo: 'queijo', valor: 2.00 },
-        { codigo: 'salgado', valor: 7.25 },
-        { codigo: 'combo1', valor: 9.50 },
-        { codigo: 'combo2', valor: 7.50 }
-        // Adicione mais itens e preços aqui, se necessário
-    ];
+            calcularValorDaCompra(formaDePagamento, itens) {
 
-    const formasValidas = ['dinheiro', 'debito', 'credito'];
+        const bibliotecaCardapio = {
+            'cafe': 3.00,
+            'chantily': 1.50,
+            'suco': 6.20,
+            'sanduiche': 6.50,
+            'queijo': 2.00,
+            'salgado': 7.25,
+            'combo1': 9.50,
+            'combo2': 7.50
+            // Adicione mais itens e preços aqui, se necessário
+        };
 
-    if (!formasValidas.includes(formaDePagamento)) {
-        return 'Forma de pagamento inválida!';
-    }
+        const formasValidas = ['dinheiro', 'debito', 'credito'];
 
-    if (itens.length === 0) {
-        return 'Não há itens no carrinho de compra!';
-    }
-
-    // Criando o mapeamento de códigos para preços usando a função split()
-    const precos = {};
-    for (const item of cardapio) {
-        precos[item.codigo] = item.valor;
-    }
-
-    const itensPrincipais = [];
-    const itensExtras = [];
-    let valorTotal = 0;
-
-    for (const itemInfo of itens) {
-        const [codigoItem, quantidade] = itemInfo.split(',');
-
-        if (!(codigoItem in precos)) {
-            return 'Item inválido!';
+        if (!formasValidas.includes(formaDePagamento)) {
+            return 'Forma de pagamento inválida!';
         }
 
-        const quantidadeParseada = parseInt(quantidade);
-        if (isNaN(quantidadeParseada) || quantidadeParseada <= 0) {
-            return 'Quantidade inválida!';
+        if (itens.length === 0) {
+            return 'Não há itens no carrinho de compra!';
         }
 
-        if ((codigoItem === 'chantily' && !itens.includes('cafe')) ||
-            (codigoItem === 'queijo' && !itens.includes('sanduiche'))) {
-            return 'Item extra não pode ser pedido sem o principal!';
+        // Criando o mapeamento de códigos para preços usando a função split()
+        const precos = {};
+        for (const item in bibliotecaCardapio) {
+            precos[item] = bibliotecaCardapio[item];
         }
 
-        if (!codigoItem.startsWith('combo')) {
-            itensPrincipais.push(codigoItem);
-        } else if (codigoItem.endsWith('extra')) {
-            itensExtras.push(codigoItem);
+        var todosCodigoItem = [];
+        let valorTotal = 0;
+
+        for (const itemInfo of itens) {
+            const [codigoItem, quantidade] = itemInfo.split(',');
+            todosCodigoItem.push(codigoItem);
+
+            if (!(codigoItem in precos)) {
+                return 'Item inválido!';
+            }
+
+            const quantidadeParseada = parseInt(quantidade);
+            if (isNaN(quantidadeParseada) || quantidadeParseada <= 0) {
+                return 'Quantidade inválida!';
+            }
+
+            if ((codigoItem === 'chantily' && !todosCodigoItem.includes('cafe')) ||
+                (codigoItem === 'queijo' && !todosCodigoItem.includes('sanduiche'))) {
+                return 'Item extra não pode ser pedido sem o principal';
+            }
+
+            valorTotal += bibliotecaCardapio[codigoItem] * quantidadeParseada;
         }
-    }
 
-    for (const codigoPrincipal of itensPrincipais) {
-        valorTotal += precos[codigoPrincipal];
-    }
+        if (formaDePagamento === 'dinheiro') {
+            valorTotal *= 0.95; // Desconto de 5%
+        } else if (formaDePagamento === 'credito') {
+            valorTotal *= 1.03; // Acréscimo de 3%
+        }
 
-    for (const codigoExtra of itensExtras) {
-        valorTotal += precos[codigoExtra];
+        return `R$ ${valorTotal.toFixed(2)}`.replace('.', ',');
     }
-
-    if (formaDePagamento === 'dinheiro') {
-        valorTotal *= 0.95; // Desconto de 5%
-    } else if (formaDePagamento === 'credito') {
-        valorTotal *= 1.03; // Acréscimo de 3%
-    }
-
-    return `R$ ${valorTotal.toFixed(2)}`;
 }
 
 export { CaixaDaLanchonete };

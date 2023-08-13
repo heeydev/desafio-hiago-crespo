@@ -1,7 +1,18 @@
 class CaixaDaLanchonete {
-            calcularValorDaCompra(formaDePagamento, itens) {
 
-        const bibliotecaCardapio = {
+    /**
+     * Calcula o valor total do pedido feito no caixa da lanchonete
+     * 
+     * @param {string} formaDePagamento 
+     * @param {array} itens 
+     * 
+     * @returns {string}
+     */
+    calcularValorDaCompra(formaDePagamento, itens) 
+    {
+    
+        // Cardapio da lanchonete com os itens e valores referentes
+        const cardapio = {
             'cafe': 3.00,
             'chantily': 1.50,
             'suco': 6.20,
@@ -10,49 +21,60 @@ class CaixaDaLanchonete {
             'salgado': 7.25,
             'combo1': 9.50,
             'combo2': 7.50
-            // Adicione mais itens e preços aqui, se necessário
         };
 
-        const formasValidas = ['dinheiro', 'debito', 'credito'];
+        // Formas de pagamento que estao disponiveis
+        const formasDePagamentoValidas = [
+            'dinheiro',
+            'debito',
+            'credito'
+        ];
 
-        if (!formasValidas.includes(formaDePagamento)) {
+        // Validando a forma de pagamento
+        if (!formasDePagamentoValidas.includes(formaDePagamento)) {
             return 'Forma de pagamento inválida!';
         }
 
+        // Verificando se existem itens no carrinho
         if (itens.length === 0) {
             return 'Não há itens no carrinho de compra!';
         }
 
-        // Criando o mapeamento de códigos para preços usando a função split()
-        const precos = {};
-        for (const item in bibliotecaCardapio) {
-            precos[item] = bibliotecaCardapio[item];
+        // Criando o mapeamento de pedidos disponiveis
+        const pedidosDisponiveis = {};
+        for (const item in cardapio) {
+            pedidosDisponiveis[item] = cardapio[item];
         }
 
-        var todosCodigoItem = [];
+        let todosCodigoItem = [];
         let valorTotal = 0;
 
-        for (const itemInfo of itens) {
-            const [codigoItem, quantidade] = itemInfo.split(',');
+        // Percorre os itens do pedido e realiza das validacoes necessarias para retornar o valor total
+        for (const item of itens) {
+            const [codigoItem, quantidadeStr] = item.split(',');
             todosCodigoItem.push(codigoItem);
 
-            if (!(codigoItem in precos)) {
+            // Validando se o item do pedido existe no cardapio
+            if (!(codigoItem in pedidosDisponiveis)) {
                 return 'Item inválido!';
             }
 
-            const quantidadeParseada = parseInt(quantidade);
-            if (isNaN(quantidadeParseada) || quantidadeParseada <= 0) {
+            // Validando a quantidade de itens
+            let quantidade = parseInt(quantidadeStr);
+            if (isNaN(quantidade) || quantidade <= 0) {
                 return 'Quantidade inválida!';
             }
 
+            // Validando se o item extra sempre é acompanhado do item principal
             if ((codigoItem === 'chantily' && !todosCodigoItem.includes('cafe')) ||
                 (codigoItem === 'queijo' && !todosCodigoItem.includes('sanduiche'))) {
                 return 'Item extra não pode ser pedido sem o principal';
             }
-
-            valorTotal += bibliotecaCardapio[codigoItem] * quantidadeParseada;
+            
+            valorTotal += cardapio[codigoItem] * quantidade;
         }
 
+        // Atualizando o valor da compra de acordo com a forma de pagamento
         if (formaDePagamento === 'dinheiro') {
             valorTotal *= 0.95; // Desconto de 5%
         } else if (formaDePagamento === 'credito') {

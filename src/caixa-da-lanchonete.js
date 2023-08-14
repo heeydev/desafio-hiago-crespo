@@ -24,14 +24,14 @@ class CaixaDaLanchonete {
         };
 
         // Formas de pagamento que estao disponiveis
-        const formasDePagamentoValidas = [
+        const formasDePagamentoDisponiveis = [
             'dinheiro',
             'debito',
             'credito'
         ];
 
         // Validando a forma de pagamento
-        if (!formasDePagamentoValidas.includes(formaDePagamento)) {
+        if (!formasDePagamentoDisponiveis.includes(formaDePagamento)) {
             return 'Forma de pagamento inválida!';
         }
 
@@ -46,31 +46,31 @@ class CaixaDaLanchonete {
             pedidosDisponiveis[item] = cardapio[item];
         }
 
-        let todosCodigoItem = [];
+        let todosItensDoPedido = [];
         let valorTotal = 0;
 
         // Percorre os itens do pedido e realiza das validacoes necessarias para retornar o valor total
         for (const item of itens) {
-            const [codigoItem, quantidadeStr] = item.split(',');
-            todosCodigoItem.push(codigoItem);
+            const [itemDoPedido, quantidadePorItemStr] = item.split(',');
+            todosItensDoPedido.push(itemDoPedido);
 
             // Validando se o item do pedido existe no cardapio
-            if (!(codigoItem in pedidosDisponiveis)) {
+            if (!(itemDoPedido in pedidosDisponiveis)) {
                 return 'Item inválido!';
             }
 
             // Validando a quantidade de itens
-            let quantidade = parseInt(quantidadeStr);
-            if (isNaN(quantidade) || quantidade <= 0) {
+            let quantidadePorItem = parseInt(quantidadePorItemStr);
+            if (isNaN(quantidadePorItem) || quantidadePorItem <= 0) {
                 return 'Quantidade inválida!';
             }
             
-            valorTotal += cardapio[codigoItem] * quantidade;
+            valorTotal += cardapio[itemDoPedido] * quantidadePorItem;
         }
 
         // Validando se o item extra sempre é acompanhado do item principal
-        if ((todosCodigoItem.includes('chantily') && !todosCodigoItem.includes('cafe')) ||
-            (todosCodigoItem.includes('queijo') && !todosCodigoItem.includes('sanduiche'))) {
+        if ((todosItensDoPedido.includes('chantily') && !todosItensDoPedido.includes('cafe')) ||
+            (todosItensDoPedido.includes('queijo') && !todosItensDoPedido.includes('sanduiche'))) {
             return 'Item extra não pode ser pedido sem o principal';
         }
 

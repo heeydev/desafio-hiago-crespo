@@ -3,8 +3,8 @@ class CaixaDaLanchonete {
     /**
      * Calcula o valor total do pedido feito no caixa da lanchonete
      * 
-     * @param {string} formaDePagamento 
-     * @param {array} itens 
+     * @param {string} formaDePagamento Forma de pagamento selecionada pelo cliente
+     * @param {array} itens Itens no pedido do cliente
      * 
      * @returns {string}
      */
@@ -64,14 +64,14 @@ class CaixaDaLanchonete {
             if (isNaN(quantidade) || quantidade <= 0) {
                 return 'Quantidade inválida!';
             }
-
-            // Validando se o item extra sempre é acompanhado do item principal
-            if ((codigoItem === 'chantily' && !todosCodigoItem.includes('cafe')) ||
-                (codigoItem === 'queijo' && !todosCodigoItem.includes('sanduiche'))) {
-                return 'Item extra não pode ser pedido sem o principal';
-            }
             
             valorTotal += cardapio[codigoItem] * quantidade;
+        }
+
+        // Validando se o item extra sempre é acompanhado do item principal
+        if ((todosCodigoItem.includes('chantily') && !todosCodigoItem.includes('cafe')) ||
+            (todosCodigoItem.includes('queijo') && !todosCodigoItem.includes('sanduiche'))) {
+            return 'Item extra não pode ser pedido sem o principal';
         }
 
         // Atualizando o valor da compra de acordo com a forma de pagamento

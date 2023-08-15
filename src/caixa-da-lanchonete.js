@@ -70,8 +70,13 @@ class CaixaDaLanchonete {
         
         // Validando se o item extra sempre é acompanhado do item principal
         if (
-            (todosItensDoPedido.includes('chantily') && !(todosItensDoPedido.includes('cafe') || todosItensDoPedido.includes('combo2'))) 
-            || (todosItensDoPedido.includes('queijo') && !(todosItensDoPedido.includes('sanduiche') || todosItensDoPedido.includes('combo1') || todosItensDoPedido.includes('combo2')))
+            (
+                todosItensDoPedido.includes('chantily') 
+                && !(todosItensDoPedido.includes('cafe') || todosItensDoPedido.includes('combo2'))
+            ) || (
+                todosItensDoPedido.includes('queijo') 
+                && !(todosItensDoPedido.includes('sanduiche') || todosItensDoPedido.includes('combo1') || todosItensDoPedido.includes('combo2'))
+            )
         ) {
             return 'Item extra não pode ser pedido sem o principal';
         }
